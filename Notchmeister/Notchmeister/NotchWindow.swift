@@ -55,7 +55,7 @@ class NotchWindow: NSWindow {
 			let contentRect = CGRect(x: notchRect.origin.x - Self.activationPadding, y: notchRect.origin.y - Self.activationPadding, width: notchRect.width + (Self.activationPadding * 2), height: notchRect.height + Self.activationPadding)
 
 			let childWindow = NSWindow(contentRect: contentRect, styleMask: .borderless, backing: .buffered, defer: false)
-			childWindow.ignoresMouseEvents = false
+			childWindow.ignoresMouseEvents = !Defaults.shouldActivateUnderNotch
 			childWindow.canHide = false
 			childWindow.isMovable = false
 			childWindow.isOpaque = false

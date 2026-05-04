@@ -42,7 +42,7 @@ enum Defaults : String, CaseIterable
 				Defaults.hideDockIconEnabled.rawValue: false,
 				Defaults.alternateDiceEnabled.rawValue: false,
 				Defaults.hideControlPanelEnabled.rawValue: false,
-				Defaults.activateUnderNotch.rawValue: true,
+				Defaults.activateUnderNotch.rawValue: false,
 			])
 			registered = true
 		}

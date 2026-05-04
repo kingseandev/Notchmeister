@@ -10,6 +10,8 @@ import Cocoa
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+	private var statusItem: NSStatusItem?
+
 	var needsActivation = false {
 		didSet {
 			debugLog("needsActivation = \(needsActivation)")
@@ -29,6 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
+		configureStatusItem()
 		
 #if !DEBUG
 		if !NSScreen.hasNotchedScreen {
@@ -74,10 +77,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@IBAction func openWindow(_ sender: Any) {
+		NSApplication.shared.activate(ignoringOtherApps: true)
 		if let window = NSApplication.shared.windows.first {
 			window.makeKeyAndOrderFront(self)
 		}
 	}
+
+	@IBAction func quitApplication(_ sender: Any) {
+		NSApplication.shared.terminate(self)
+	}
+
+	private func configureStatusItem() {
+		let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+		statusItem.button?.image = NSImage(systemSymbolName: "sparkles", accessibilityDescription: "Notchmeister")
+		statusItem.button?.image?.isTemplate = true
+		statusItem.button?.toolTip = "Notchmeister"
+
+		let menu = NSMenu(title: "Notchmeister")
+		menu.addItem(menuItem(title: "Settings...", action: #selector(openWindow(_:)), keyEquivalent: ","))
+		menu.addItem(.separator())
+		menu.addItem(menuItem(title: "Quit Notchmeister", action: #selector(quitApplication(_:)), keyEquivalent: "q"))
+		statusItem.menu = menu
+
+		self.statusItem = statusItem
+	}
+
+	private func menuItem(title: String, action: Selector, keyEquivalent: String) -> NSMenuItem {
+		let item = NSMenuItem(title: title, action: action, keyEquivalent: keyEquivalent)
+		item.target = self
+		return item
+	}
 	
 }
-
