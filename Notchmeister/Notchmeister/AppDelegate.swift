@@ -21,6 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	override init() {
 		super.init()
 		Defaults.register()
+		// Personal fork: keep notch clicks available to DropNotch.
+		Defaults.shouldActivateUnderNotch = false
 	}
 	
 	func applicationWillFinishLaunching(_ notification: Notification) {
