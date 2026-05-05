@@ -90,14 +90,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	private func configureStatusItem() {
-		let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-		if let button = statusItem.button {
-			button.title = "NM"
-			button.image = NSImage(systemSymbolName: "sparkles", accessibilityDescription: "Notchmeister")
-			button.image?.isTemplate = true
-			button.imagePosition = .imageLeading
-			button.toolTip = "Notchmeister"
-		}
+		let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+		statusItem.button?.image = NSImage(systemSymbolName: "sparkles", accessibilityDescription: "Notchmeister")
+		statusItem.button?.image?.isTemplate = true
+		statusItem.button?.toolTip = "Notchmeister"
 
 		let menu = NSMenu(title: "Notchmeister")
 		menu.addItem(menuItem(title: "Settings...", action: #selector(openWindow(_:)), keyEquivalent: ","))
