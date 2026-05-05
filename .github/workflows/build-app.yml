@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build unsigned macOS app
+    name: Build macOS app
     runs-on: macos-latest
 
     steps:
@@ -34,16 +34,24 @@ jobs:
             DEVELOPMENT_TEAM="" \
             build
 
+      - name: Ad-hoc sign app
+        run: |
+          set -euo pipefail
+          APP_PATH="build/Build/Products/Release/Notchmeister.app"
+          test -d "$APP_PATH"
+          codesign --force --deep --sign - "$APP_PATH"
+          codesign --verify --deep --strict "$APP_PATH"
+
       - name: Package app
         run: |
           set -euo pipefail
           APP_PATH="build/Build/Products/Release/Notchmeister.app"
           test -d "$APP_PATH"
-          ditto -c -k --keepParent "$APP_PATH" Notchmeister-unsigned.zip
+          ditto -c -k --keepParent "$APP_PATH" Notchmeister-app.zip
 
       - name: Upload app artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Notchmeister-unsigned
-          path: Notchmeister-unsigned.zip
+          name: Notchmeister-app
+          path: Notchmeister-app.zip
           if-no-files-found: error
