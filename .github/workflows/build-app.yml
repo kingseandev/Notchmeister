@@ -1,0 +1,49 @@
+name: Build Notchmeister App
+
+on:
+  push:
+    branches:
+      - codex/notch-click-through-menu-bar
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build unsigned macOS app
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Select latest Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build Notchmeister
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project Notchmeister/Notchmeister.xcodeproj \
+            -scheme Notchmeister \
+            -configuration Release \
+            -derivedDataPath build \
+            ORGANIZATION_IDENTIFIER=com.kingseandev \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Package app
+        run: |
+          set -euo pipefail
+          APP_PATH="build/Build/Products/Release/Notchmeister.app"
+          test -d "$APP_PATH"
+          ditto -c -k --keepParent "$APP_PATH" Notchmeister-unsigned.zip
+
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Notchmeister-unsigned
+          path: Notchmeister-unsigned.zip
+          if-no-files-found: error
