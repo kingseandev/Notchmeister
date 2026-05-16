@@ -91,11 +91,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func configureStatusItem() {
 		let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-		statusItem.autosaveName = "NotchmeisterStatusItem"
-		statusItem.isVisible = true
 
 		if let button = statusItem.button {
-			button.title = "✦"
+			button.image = NSApp.applicationIconImage
+			button.imagePosition = .imageOnly
+			button.imageScaling = .scaleProportionallyDown
 			button.toolTip = "Notchmeister"
 		}
 
