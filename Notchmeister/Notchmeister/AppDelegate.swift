@@ -95,9 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		statusItem.isVisible = true
 
 		if let button = statusItem.button {
-			button.image = statusItemSparkleImage()
-			button.imagePosition = .imageOnly
-			button.imageScaling = .scaleProportionallyDown
+			button.title = "✦"
 			button.toolTip = "Notchmeister"
 		}
 
@@ -108,38 +106,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		statusItem.menu = menu
 
 		self.statusItem = statusItem
-	}
-
-	private func statusItemSparkleImage() -> NSImage {
-		let image = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { _ in
-			NSColor.black.setFill()
-			self.drawSparkle(center: CGPoint(x: 9, y: 9), outerRadius: 7, innerRadius: 2.5)
-			self.drawSparkle(center: CGPoint(x: 14, y: 4), outerRadius: 3, innerRadius: 1)
-			return true
-		}
-		image.isTemplate = true
-		return image
-	}
-
-	private func drawSparkle(center: CGPoint, outerRadius: CGFloat, innerRadius: CGFloat) {
-		let points = [
-			CGPoint(x: center.x, y: center.y + outerRadius),
-			CGPoint(x: center.x + innerRadius, y: center.y + innerRadius),
-			CGPoint(x: center.x + outerRadius, y: center.y),
-			CGPoint(x: center.x + innerRadius, y: center.y - innerRadius),
-			CGPoint(x: center.x, y: center.y - outerRadius),
-			CGPoint(x: center.x - innerRadius, y: center.y - innerRadius),
-			CGPoint(x: center.x - outerRadius, y: center.y),
-			CGPoint(x: center.x - innerRadius, y: center.y + innerRadius),
-		]
-
-		let path = NSBezierPath()
-		path.move(to: points[0])
-		for point in points.dropFirst() {
-			path.line(to: point)
-		}
-		path.close()
-		path.fill()
 	}
 
 	private func menuItem(title: String, action: Selector, keyEquivalent: String) -> NSMenuItem {
