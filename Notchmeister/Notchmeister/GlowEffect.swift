@@ -15,7 +15,7 @@ class GlowEffect: NotchEffect {
 	var maskLayer: CAGradientLayer
 	var debugLayer: CALayer?
 
-	var hotSpotOffset: CGPoint = .zero
+	var glowOffset: CGPoint = .zero
 	
 	let glowRadius = 60.0 // notch height is 38 pt, with 50 pt border
 	let maskRadius = 12.0 // cursor radius is 23 pt / 2 = 11.5
@@ -139,12 +139,12 @@ class GlowEffect: NotchEffect {
 		glowLayer.opacity = 0
 		edgeLayer.opacity = 1 // .. and probably completely masked out
 
-		// NOTE: We record the hot spot relative to the center of the cursor since we're dealing with layers
-		// that want to be over the point of maximum luminence.
+		// Keep the glow horizontally centered on the notch point so the effect is balanced
+		// on both sides of the notch, while preserving the cursor's vertical hotspot offset.
 		let cursor = NSCursor.current
 		let cursorBounds = CGRect(origin: .zero, size: cursor.image.size)
 		let hotSpot = cursor.hotSpot
-		hotSpotOffset = CGPoint(x: cursorBounds.midX - hotSpot.x, y: cursorBounds.midY - hotSpot.y)
+		glowOffset = CGPoint(x: 0, y: cursorBounds.midY - hotSpot.y)
 	}
 	
 	override func mouseMoved(at point: CGPoint, underNotch: Bool) {
@@ -164,11 +164,11 @@ class GlowEffect: NotchEffect {
 				glowLayer.opacity = 0
 			}
 		
-			glowLayer.position = point + hotSpotOffset
-			maskLayer.position = point + hotSpotOffset
+			glowLayer.position = point + glowOffset
+			maskLayer.position = point + glowOffset
 			
 			if let debugLayer = debugLayer {
-				debugLayer.position = point + hotSpotOffset
+				debugLayer.position = point + glowOffset
 			}
 		}
 	}
