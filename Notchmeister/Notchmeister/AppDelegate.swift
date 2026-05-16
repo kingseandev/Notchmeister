@@ -93,7 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 
 		if let button = statusItem.button {
-			button.image = NSApp.applicationIconImage
+			button.image = statusItemIconImage()
 			button.imagePosition = .imageOnly
 			button.imageScaling = .scaleProportionallyDown
 			button.toolTip = "Notchmeister"
@@ -106,6 +106,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		statusItem.menu = menu
 
 		self.statusItem = statusItem
+	}
+
+	private func statusItemIconImage() -> NSImage {
+		let baseImage = NSApp.applicationIconImage ?? NSImage(size: NSSize(width: 18, height: 18))
+		let image = baseImage.copy() as? NSImage ?? baseImage
+		image.isTemplate = true
+		return image
 	}
 
 	private func menuItem(title: String, action: Selector, keyEquivalent: String) -> NSMenuItem {
