@@ -110,8 +110,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func statusItemIconImage() -> NSImage {
 		let baseImage = NSApp.applicationIconImage ?? NSImage(size: NSSize(width: 18, height: 18))
-		let image = baseImage.copy() as? NSImage ?? baseImage
-		image.isTemplate = true
+		guard
+			let tiffData = baseImage.tiffRepresentation,
+			let ciImage = CIImage(data: tiffData),
+			let filter = CIFilter(name: "CIPhotoEffectMono")
+		else {
+			return baseImage
+		}
+
+		filter.setValue(ciImage, forKey: kCIInputImageKey)
+		guard let outputImage = filter.outputImage else {
+			return baseImage
+		}
+
+		let image = NSImage(size: baseImage.size)
+		let representation = NSCIImageRep(ciImage: outputImage)
+		image.addRepresentation(representation)
+		image.isTemplate = false
 		return image
 	}
 
