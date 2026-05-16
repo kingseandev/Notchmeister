@@ -91,9 +91,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func configureStatusItem() {
 		let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-		statusItem.button?.image = statusItemSparkleImage()
-		statusItem.button?.imagePosition = .imageOnly
-		statusItem.button?.toolTip = "Notchmeister"
+		statusItem.autosaveName = "NotchmeisterStatusItem"
+		statusItem.isVisible = true
+
+		if let button = statusItem.button {
+			button.image = statusItemSparkleImage()
+			button.imagePosition = .imageOnly
+			button.imageScaling = .scaleProportionallyDown
+			button.toolTip = "Notchmeister"
+		}
 
 		let menu = NSMenu(title: "Notchmeister")
 		menu.addItem(menuItem(title: "Settings...", action: #selector(openWindow(_:)), keyEquivalent: ","))
@@ -105,14 +111,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	private func statusItemSparkleImage() -> NSImage {
-		let image = NSImage(size: NSSize(width: 18, height: 18))
-		image.lockFocus()
-		NSColor.black.setFill()
-
-		drawSparkle(center: CGPoint(x: 9, y: 9), outerRadius: 7, innerRadius: 2.5)
-		drawSparkle(center: CGPoint(x: 14, y: 4), outerRadius: 3, innerRadius: 1)
-
-		image.unlockFocus()
+		let image = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { _ in
+			NSColor.black.setFill()
+			self.drawSparkle(center: CGPoint(x: 9, y: 9), outerRadius: 7, innerRadius: 2.5)
+			self.drawSparkle(center: CGPoint(x: 14, y: 4), outerRadius: 3, innerRadius: 1)
+			return true
+		}
 		image.isTemplate = true
 		return image
 	}
